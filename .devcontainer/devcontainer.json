@@ -1,7 +1,5 @@
 {
 	"name": "FlutterAppContainer",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	//"image": "mcr.microsoft.com/devcontainers/base:jammy"
 	"dockerFile": "Dockerfile",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
@@ -15,14 +13,12 @@
 
 	// Configure tool-specific properties.
 	"customizations": {
-
-		// VS Code Settings
 		"vscode": {
-			// Extensions to install in image
 			"extensions": [
 				"dart-code.dart-code",
 				"dart-code.flutter"
 			]
 		}
 	}
+	
 }

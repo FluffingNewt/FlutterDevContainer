@@ -1,18 +1,31 @@
-from mcr.microsoft.com/devcontainers/base:jammy
+from mcr.microsoft.com/devcontainers/base:ubuntu
 
-# # Flutter SDK
-# # https://flutter.dev/docs/development/tools/sdk/releases?tab=linux
-# ENV FLUTTER_CHANNEL="stable"
-# ENV FLUTTER_VERSION="3.3.4"
-# # Make sure to use the needed channel and version for this.
-# ENV FLUTTER_HOME=~/flutter
-# ENV PATH=${PATH}:${FLUTTER_HOME}/bin
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=${USER_UID}
 
-# # Flutter SDK
-# RUN curl -C - --output flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/${FLUTTER_CHANNEL}/linux/flutter_linux_${FLUTTER_VERSION}-${FLUTTER_CHANNEL}.tar.xz \
-# 	&& tar -xf flutter.tar.xz -C ~ \
-# 	&& rm flutter.tar.xz \
-# 	&& flutter config --android-sdk "${ANDROID_SDK_ROOT}" \
-# 	&& yes | flutter doctor --android-licenses \
-# 	&& flutter config --no-analytics \
-# 	&& flutter update-packages
+ENV HOME=/home/${USERNAME}
+
+# Apt
+# RUN apt-get update
+# RUN apt-get install -y wget \
+#     bash \
+#     curl \
+#     file \
+#     git \
+#     mkdir \
+#     rm \
+#     which \
+#     xz-utils \
+#     zip \
+#     unzip \
+#     openjdk-17-jdk-headless --no-install-recommends \
+#     ninja-build \
+#     clang \
+#     cmake \
+#     pkg-config
+
+# RUN apt-get autoremove -y \
+#     && apt-get clean -y \
+#     && rm -rf /var/lib/aot/list/*
+
