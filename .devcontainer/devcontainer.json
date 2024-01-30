@@ -20,8 +20,8 @@
 		"vscode": {
 			// Extensions to install in image
 			"extensions": [
-				// "",
-				// "",
+				"dart-code.dart-code",
+				"dart-code.flutter",
 				// "",
 				// ""
 			]
