@@ -11,25 +11,25 @@ RUN apt update \
 	&& apt install -y sudo \
 	&& apt install -y openjdk-17-jdk-headless --no-install-recommends \
 	&& apt install -y wget curl git xz-utils zip unzip --no-install-recommends 
+	# && apt install -y   wget \
+	# 					bash \
+	# 					curl \
+	# 					file \
+	# 					git \
+	# 					mkdir \
+	# 					rm \
+	# 					zip \
+	# 					unzip --no-install-recommends \
+	# 					which \
+	# 					xz-utils
+	# 					# ninja-build \
+	# 					# clang \
+	# 					# cmake \
+	# 					# pkg-config 
 
-# RUN apt-get install -y wget \
-#     bash \
-#     curl \
-#     file \
-#     git \
-#     mkdir \
-#     rm \
-#     which \
-#     xz-utils \
-#     zip \
-#     unzip \
-#     openjdk-17-jdk-headless --no-install-recommends \
-#     ninja-build \
-#     clang \
-#     cmake \
-#     pkg-config
+# Clean up
+RUN apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/list/*
 
-# RUN apt-get autoremove -y \
-#     && apt-get clean -y \
-#     && rm -rf /var/lib/aot/list/*
 
