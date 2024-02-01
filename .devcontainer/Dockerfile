@@ -6,8 +6,12 @@ ARG USER_GID=${USER_UID}
 
 ENV HOME=/home/${USERNAME}
 
-# Apt
-# RUN apt-get update
+# Make sure all required packages are installed
+RUN apt update \
+	&& apt install -y sudo \
+	&& apt install -y openjdk-17-jdk-headless --no-install-recommends \
+	&& apt install -y wget curl git xz-utils zip unzip --no-install-recommends 
+
 # RUN apt-get install -y wget \
 #     bash \
 #     curl \
