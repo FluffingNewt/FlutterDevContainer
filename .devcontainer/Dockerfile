@@ -1,5 +1,9 @@
 from mcr.microsoft.com/devcontainers/base:ubuntu
 
+ENV UID=1000
+ENV GID=1000
+ENV USER="vscode"
+
 ENV LANG en_US.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -21,6 +25,15 @@ RUN apt update \
 RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* 
+
+
+# create user
+RUN echo $USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER \
+  && chmod 0440 /etc/sudoers.d/$USER \
+  && su ${USER}
+
+USER $USER
+WORKDIR /home/$USER
 
 #####################################################################################
 
