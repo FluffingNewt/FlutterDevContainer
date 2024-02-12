@@ -60,8 +60,13 @@ RUN mkdir ${ANDROID_HOME} \
   && mv ${ANDROID_HOME}/cmdline-tools/lib ${ANDROID_HOME}/cmdline-tools/latest \
   && mv ${ANDROID_HOME}/cmdline-tools/NOTICE.txt ${ANDROID_HOME}/cmdline-tools/latest \
   && mv ${ANDROID_HOME}/cmdline-tools/source.properties ${ANDROID_HOME}/cmdline-tools/latest \
-  && yes "y" | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
-  && yes "y" | sdkmanager "platforms;android-$ANDROID_VERSION" \
-  && yes "y" | sdkmanager "platform-tools" \
-  && yes "y" | sdkmanager "emulator" \
-  && yes "y" | sdkmanager "system-images;android-$ANDROID_VERSION;google_apis_playstore;$ANDROID_ARCHITECTURE"
+  && sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
+  && sdkmanager "platforms;android-$ANDROID_VERSION" \
+  && sdkmanager "platform-tools" \
+  && sdkmanager "emulator" \
+  && sdkmanager "system-images;android-$ANDROID_VERSION;google_apis_playstore;$ANDROID_ARCHITECTURE"
+  # && yes "y" | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
+  # && yes "y" | sdkmanager "platforms;android-$ANDROID_VERSION" \
+  # && yes "y" | sdkmanager "platform-tools" \
+  # && yes "y" | sdkmanager "emulator" \
+  # && yes "y" | sdkmanager "system-images;android-$ANDROID_VERSION;google_apis_playstore;$ANDROID_ARCHITECTURE"
