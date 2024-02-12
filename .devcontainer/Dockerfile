@@ -40,6 +40,7 @@ WORKDIR /home/$USER
 # Flutter
 RUN mkdir "${HOME}/sdk" \
     && git clone -b master https://github.com/flutter/flutter.git ${FLUTTER_HOME} \
+    && flutter --disable-analytics \
     && flutter doctor
 
 #####################################################################################
