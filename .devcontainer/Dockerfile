@@ -12,18 +12,12 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV HOME="/home/vscode"
 ENV FLUTTER_HOME="${HOME}/sdk/flutter"
 ENV ANDROID_HOME="${HOME}/sdk/android"
-ENV CHROME_HOME="${HOME}/chrome"
 
 ENV PATH=${PATH}:${FLUTTER_HOME}/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/platforms
 
 # Make sure all required packages are installed
-# RUN apt update \
-#     && apt install -y sudo \
-#     && apt install -y openjdk-17-jdk-headless --no-install-recommends \
-#     && apt install -y wget curl git clang cmake ninja-build libgtk-3-dev pkg-config xz-utils zip unzip --no-install-recommends
 RUN apt update \
     && apt install -y sudo \
-    # openjdk-17-jdk-headless --no-install-recommends \
     openjdk-17-jdk-headless \
     wget \
     gnupg \
