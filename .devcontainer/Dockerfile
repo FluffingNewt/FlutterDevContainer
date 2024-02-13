@@ -86,10 +86,3 @@ RUN mkdir ${ANDROID_HOME} \
 
 #####################################################################################
 
-# Google Chrome
-# RUN mkdir ${CHROME_HOME} \
-#   && cd ${CHROME_HOME} \
-# RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-# RUN sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
-  # && rm google-chrome-stable_current_amd64.deb
-
