@@ -12,14 +12,31 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV HOME="/home/vscode"
 ENV FLUTTER_HOME="${HOME}/sdk/flutter"
 ENV ANDROID_HOME="${HOME}/sdk/android"
+ENV CHROME_HOME="${HOME}/chrome"
 
 ENV PATH=${PATH}:${FLUTTER_HOME}/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/platforms
 
 # Make sure all required packages are installed
+# RUN apt update \
+#     && apt install -y sudo \
+#     && apt install -y openjdk-17-jdk-headless --no-install-recommends \
+#     && apt install -y wget curl git clang cmake ninja-build libgtk-3-dev pkg-config xz-utils zip unzip --no-install-recommends
 RUN apt update \
     && apt install -y sudo \
-    && apt install -y openjdk-17-jdk-headless --no-install-recommends \
-    && apt install -y wget curl git clang cmake ninja-build libgtk-3-dev pkg-config xz-utils zip unzip --no-install-recommends
+    # openjdk-17-jdk-headless --no-install-recommends \
+    openjdk-17-jdk-headless \
+    wget \
+    gnupg \
+    curl \
+    git \
+    clang \
+    cmake \
+    ninja-build \
+    libgtk-3-dev \
+    pkg-config \
+    xz-utils \
+    zip \
+    unzip --no-install-recommends
 
     # Clean Up
 RUN apt-get autoremove -y \
@@ -41,6 +58,7 @@ WORKDIR /home/$USER
 RUN mkdir "${HOME}/sdk" \
     && git clone -b master https://github.com/flutter/flutter.git ${FLUTTER_HOME} \
     && flutter --disable-analytics \
+    && flutter config --enable-web \
     && flutter doctor
 
 #####################################################################################
@@ -65,3 +83,13 @@ RUN mkdir ${ANDROID_HOME} \
   && yes "y" | sdkmanager "platform-tools" \
   && yes "y" | sdkmanager "emulator" \
   && yes "y" | sdkmanager "system-images;android-$ANDROID_VERSION;google_apis_playstore;$ANDROID_ARCHITECTURE"
+
+#####################################################################################
+
+# Google Chrome
+# RUN mkdir ${CHROME_HOME} \
+#   && cd ${CHROME_HOME} \
+# RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+# RUN sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
+  # && rm google-chrome-stable_current_amd64.deb
+
