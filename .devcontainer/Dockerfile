@@ -1,7 +1,5 @@
 from mcr.microsoft.com/devcontainers/base:ubuntu
 
-ENV UID=1000
-ENV GID=1000
 ENV USER="vscode"
 
 ENV LANG en_US.UTF-8
