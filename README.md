@@ -11,7 +11,7 @@ This repo sets up a containerized development environment that supports the deve
 1. Creating a directory to use as your Flutter development environment, clone this repository and copy its .devcontainer folder to the environment's root directory.
 
 2. Clone this repo to your new folder and copy its .devcontainer folder to the environment's root directory.  
-* Once the .devcontainer is moved, it is safe to delete "FlutterAppProject" folder created from the clone.
+* Once the .devcontainer is moved, it is safe to delete "FlutterDevContainer" folder created from the clone.
 
 3. Open your development environment folder in VSCODE.  
 
