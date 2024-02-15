@@ -15,26 +15,26 @@ ENV PATH=${PATH}:${FLUTTER_HOME}/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${
 
 # Make sure all required packages are installed
 RUN apt update \
-    && apt install -y sudo \
-    openjdk-17-jdk-headless \
-    wget \
-    gnupg \
-    curl \
-    git \
-    clang \
-    cmake \
-    ninja-build \
-    libgtk-3-dev \
-    pkg-config \
-    xz-utils \
-    zip \
-    unzip --no-install-recommends
+    && apt install -y \
+      sudo \
+      openjdk-17-jdk-headless \
+      wget \
+      gnupg \
+      curl \
+      git \
+      clang \
+      cmake \
+      ninja-build \
+      libgtk-3-dev \
+      pkg-config \
+      xz-utils \
+      zip \
+      unzip --no-install-recommends
 
-    # Clean Up
+# Clean Up
 RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* 
-
 
 # create user
 RUN echo $USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER \
@@ -78,4 +78,3 @@ RUN mkdir ${ANDROID_HOME} \
   && yes "y" | sdkmanager --licenses
 
 #####################################################################################
-
