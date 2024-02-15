@@ -9,7 +9,9 @@ This repo sets up a containerized development environment that supports the deve
 
 ## Creating DevContainer
 1. Clone this repo to a destination of your choosing.  
+
 2. Open the cloned repo folder in VSCODE.  
+
 3. If the correct extensions are installed and Docker is running, a notification should appear to "Reopen in Container," click this. Else, open the small blue remote connection window in the bottom left and select the same thing ("Reopen in Container").  
 
 Once the Dev Container fully opens, you are good to go for development.
