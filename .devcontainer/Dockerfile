@@ -1,83 +1,102 @@
-from mcr.microsoft.com/devcontainers/base:ubuntu
+from ubuntu:latest as ubuntu_container
 
-ENV LANG en_US.UTF-8
+######################################################################################
+
+# Set up Environmental Variables
 ENV DEBIAN_FRONTEND noninteractive
-
-#####################################################################################
-
-# Make sure all required packages are installed
-RUN apt update \
-    && apt install -y \
-      sudo \
-      openjdk-17-jdk-headless \
-      wget \
-      gnupg \
-      curl \
-      git \
-      clang \
-      cmake \
-      ninja-build \
-      libgtk-3-dev \
-      pkg-config \
-      xz-utils \
-      zip \
-      unzip --no-install-recommends
-
-# Clean Up
-RUN apt-get autoremove -y \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* 
-
-# create user
 ENV USER="vscode"
 ENV HOME="/home/$USER"
 
-RUN echo $USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER \
-  && chmod 0440 /etc/sudoers.d/$USER \
-  && su ${USER}
+# Update packages, install required tools, and clean up
+RUN apt update -y \
+ && apt install -y \
+     sudo \
+     openjdk-17-jdk-headless \
+     # Linux prerequisites
+     curl \
+     git \
+     xz-utils \
+     zip \
+     unzip \
+     libglu1-mesa \
+     # Flutter prerequisites
+     clang \
+     cmake \
+     ninja-build \
+     pkg-config \
+     libgtk-3-dev \
+     # Chrome prerequisites
+     wget \
+     gpg \
+ && apt autoremove -y \
+ && apt clean -y \
+ && rm -rf /var/lib/apt/lists/* 
+
+# Create a non-root user and configure sudo for non-password access
+RUN useradd -rm -d /home/$USER -s /bin/bash -g root -G sudo -u 1001 $USER \
+ && echo $USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER \
+ && chmod 0440 /etc/sudoers.d/$USER
 
 USER $USER
 WORKDIR $HOME
 
-#####################################################################################
+######################################################################################
 
 # Flutter
 
-ENV FLUTTER_HOME="${HOME}/sdk/flutter"
-ENV PATH=${PATH}:${FLUTTER_HOME}/bin
+ENV FLUTTER_HOME="$HOME/sdk/flutter"
+ENV PATH=$PATH:$FLUTTER_HOME/bin
 
-RUN mkdir "${HOME}/sdk" \
-    && git clone -b master https://github.com/flutter/flutter.git ${FLUTTER_HOME} \
-    && flutter --disable-analytics \
-    && flutter config --enable-web \
-    && flutter doctor
+# Install flutter
+RUN git clone -b master https://github.com/flutter/flutter.git $FLUTTER_HOME \
+ && flutter update-packages \
+ && flutter config --enable-web \
+ && flutter config --android-sdk "$ANDROID_HOME"
 
-#####################################################################################
+######################################################################################
+#################################### Extra Credit ####################################
+######################################################################################
 
-# Android SDK - If ever needed
+# Android SDK
 
-# ENV ANDROID_HOME="${HOME}/sdk/android"
-# ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/platforms
+ENV ANDROID_HOME="$HOME/sdk/android"
+ENV PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/platforms
 
-# ENV ANDROID_VERSION="34"
-# ENV ANDROID_BUILD_TOOLS_VERSION="34.0.0"
-# ENV ANDROID_ARCHITECTURE="x86_64"
+# Install Android SDK
+RUN mkdir -p $ANDROID_HOME \
+ && curl -o android_tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip \
+ && unzip -q -d "$ANDROID_HOME" android_tools.zip \
+ && rm android_tools.zip
 
-# RUN mkdir ${ANDROID_HOME} \
-#   && touch ${ANDROID_HOME}/repositories.cfg \
-#   && curl -o android_tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip \
-#   && unzip -qq -d "${ANDROID_HOME}" android_tools.zip \
-#   && rm android_tools.zip \
-#   && mkdir ${ANDROID_HOME}/cmdline-tools/latest \
-#   && mv ${ANDROID_HOME}/cmdline-tools/bin ${ANDROID_HOME}/cmdline-tools/latest \
-#   && mv ${ANDROID_HOME}/cmdline-tools/lib ${ANDROID_HOME}/cmdline-tools/latest \
-#   && mv ${ANDROID_HOME}/cmdline-tools/NOTICE.txt ${ANDROID_HOME}/cmdline-tools/latest \
-#   && mv ${ANDROID_HOME}/cmdline-tools/source.properties ${ANDROID_HOME}/cmdline-tools/latest \
-#   && yes "y" | sdkmanager "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
-#   && yes "y" | sdkmanager "platforms;android-$ANDROID_VERSION" \
-#   && yes "y" | sdkmanager "platform-tools" \
-#   && yes "y" | sdkmanager "emulator" \
-#   && yes "y" | sdkmanager "system-images;android-$ANDROID_VERSION;google_apis_playstore;$ANDROID_ARCHITECTURE" \
-#   && yes "y" | sdkmanager --licenses
+# Configure SDK files
+RUN touch $ANDROID_HOME/repositories.cfg \
+ && mkdir $ANDROID_HOME/cmdline-tools/latest \
+ && mv $ANDROID_HOME/cmdline-tools/lib $ANDROID_HOME/cmdline-tools/latest \
+ && mv $ANDROID_HOME/cmdline-tools/bin $ANDROID_HOME/cmdline-tools/latest \
+ && mv $ANDROID_HOME/cmdline-tools/NOTICE.txt $ANDROID_HOME/cmdline-tools/latest \
+ && mv $ANDROID_HOME/cmdline-tools/source.properties $ANDROID_HOME/cmdline-tools/latest
 
-#####################################################################################
+# Install and accept Android packages
+RUN yes | sdkmanager "platforms;android-34" \
+ && yes | sdkmanager "build-tools;34.0.0" \
+ && yes | sdkmanager "platform-tools" \
+ && yes | sdkmanager "emulator" \
+ && yes | sdkmanager "system-images;android-34;google_apis_playstore;x86_64" \
+ && sdkmanager --update \
+ && yes | sdkmanager --licenses
+
+######################################################################################
+
+# Chrome
+
+RUN sudo wget https://dl-ssl.google.com/linux/linux_signing_key.pub -O /tmp/google.pub \
+ && sudo gpg --no-default-keyring \
+        --keyring /etc/apt/keyrings/google-chrome.gpg \
+        --import /tmp/google.pub \
+ && echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list \
+ && sudo apt update && sudo apt install -y google-chrome-stable \
+ && sudo apt autoremove -y \
+ && sudo apt clean -y \
+ && sudo rm -rf /var/lib/apt/lists/* 
+
+######################################################################################
