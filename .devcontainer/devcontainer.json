@@ -2,7 +2,7 @@
 	"name": "Flutter_DevContainer",
 	"dockerFile": "Dockerfile",
 
-	//"postCreateCommand": "sudo chown -R vscode /home/$USER/sdk/flutter/",
+	"postCreateCommand": "sudo chown -R vscode /home/$USER/sdk/flutter/",
 
 	"customizations": {
 		"vscode": {
